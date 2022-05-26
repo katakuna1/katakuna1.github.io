@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" class="link-html">
+    <head>
+        <title>nu-i acas'</title>
+        <base href="">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        
+                    <link href="../favicons/clown.ico" rel="shortcut icon">
+        
+        
+                    <link href="css/css-bootstrap.min.css" rel="stylesheet" media="screen">
+                    <link href="css/css-custom.css" rel="stylesheet" media="screen">
+                    <link href="css/css-link-custom.css" rel="stylesheet" media="screen">
+                    <link href="css/css-animate.min.css" rel="stylesheet" media="screen">
+        
+                                <link href="https://fonts.googleapis.com/css?family=Lato&amp;display=swap" rel="stylesheet">
+            <style>
+                body {
+                    font-family: 'Lato', sans-serif !important;
+                }
+            </style>
+        
+        
+                    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-124960617-11"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-124960617-11');
+</script>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
+        
+        <link rel="canonical" href="http://katakuna1.rf.gd/">
+    </head>
+
+    
+<body class="link-body " style="background: #000000;">
+        <div class="row d-flex justify-content-center text-center">
+            <div class="col-md-8 link-content ">
+
+                <header class="d-flex flex-column align-items-center" style="color: #fff">
+                    <div class="d-flex flex-row align-items-center mt-4">
+                        <h1 id="title" title="sa zicem">sa zicem ca se lucreaza...</h1>   
+                    </div>                       
+
+                <footer class="link-footer">
+                     <a href="../index.html" on-hold="lol" style="color: #fff" title="asta este homepage care te duce pe pagina principala">homepage</a>        
+                 </footer>
+                
+
+            </div>
+        </div>
+    </div>
+
+    </body>
+
+    <body onload="startTime()">
+
+<h2></h2>
+
+
+<center>
+<div id="txt" style="color: #fff" title="asta este ceasul unde vezi cat este ceasul"></div>
+
+<script>
+function startTime() {
+  const today = new Date();
+  let h = today.getHours();
+  let m = today.getMinutes();
+  let s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('txt').innerHTML =  h + ":" + m + ":" + s;
+  setTimeout(startTime, 1000);
+}
+
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+</script>
+
+</center>
+</body>
+
+
+
+    
+<input type="hidden" id="url" name="url" value="https://katakuna1.rf.gd">
+<input type="hidden" name="global_token" value="fe032910976fa32b479c70d1b61c7424">
+<input type="hidden" name="number_decimal_point" value=".">
+<input type="hidden" name="number_thousands_separator" value=",">
+
+<script>
+    /* Some global variables */
+    window.altum = {};
+    let global_token = document.querySelector('input[name="global_token"]').value;
+    let url = document.querySelector('input[name="url"]').value;
+    let decimal_point = document.querySelector('[name="number_decimal_point"]').value;
+    let thousands_separator = document.querySelector('[name="number_thousands_separator"]').value;
+</script>
+
+            <script src="js/libraries-jquery.min.js"></script>
+            <script src="js/libraries-popper.min.js"></script>
+            <script src="js/libraries-bootstrap.min.js"></script>
+            <script src="js/js-main.js"></script>
+            <script src="js/js-functions.js"></script>
+            <script src="js/libraries-fontawesome.min.js"></script>
+    
+    <script>
+    let base_url = "https:\/\/katakuna1.rf.gd\/";
+
+    /* Internal tracking for biolink links */
+    $('[data-link-url]').on('click', event => {
+        let url = $(event.currentTarget).data('link-url');
+
+        $.ajax(`${base_url}${url}?no_redirect`);
+    });
+
+    /* Go over all mail buttons to make sure the user can still submit mail */
+    $('form[id^="mail_"]').each((index, element) => {
+        let link_id = $(element).find('input[name="link_id"]').val();
+        let is_converted = localStorage.getItem(`mail_${link_id}`);
+
+        if(is_converted) {
+            /* Set the submit button to disabled */
+            $(element).find('button[type="submit"]').attr('disabled', 'disabled');
+        }
+    });
+        /* Form handling for mail submissions if any */
+    $('form[id^="mail_"]').on('submit', event => {
+        let link_id = $(event.currentTarget).find('input[name="link_id"]').val();
+        let is_converted = localStorage.getItem(`mail_${link_id}`);
+
+        if(!is_converted) {
+
+            $.ajax({
+                type: 'POST',
+                url: `${base_url}link-ajax`,
+                data: $(event.currentTarget).serialize(),
+                success: (data) => {
+                    let notification_container = $(event.currentTarget).find('.notification-container');
+
+                    if (data.status == 'error') {
+                        notification_container.html('');
+
+                        display_notifications(data.message, 'error', notification_container);
+                    } else if (data.status == 'success') {
+
+                        display_notifications(data.message, 'success', notification_container);
+
+                        setTimeout(() => {
+
+                            /* Hide modal */
+                            $(event.currentTarget).closest('.modal').modal('hide');
+
+                            /* Remove the notification */
+                            notification_container.html('');
+
+                            /* Set the localstorage to mention that the user was converted */
+                            localStorage.setItem(`mail_${link_id}`, true);
+
+                            /* Set the submit button to disabled */
+                            $(event.currentTarget).find('button[type="submit"]').attr('disabled', 'disabled');
+
+                        }, 1000);
+
+                    }
+                },
+                dataType: 'json'
+            });
+
+        }
+
+        event.preventDefault();
+    })
+</script>
+<script>
+    var click = document.getElementById('click');
+var textarea = document.getElementById('textarea');
+var clicks = document.getElementById('count');
+var dcCount = document.getElementById('dcCount');
+var reset = document.getElementById('reset');
+reset.onclick = function() {
+  clicks.value = 0;
+  dcCount.value = 0;
+  textarea.value = '';
+  click.style.background = 'orange';
+}
+
+var prevClickMicrotime = microtime(true);
+function microtime(get_as_float) {
+  //  discuss at: http://phpjs.org/functions/microtime/
+  // original by: Paulo Freitas
+  //   example 1: timeStamp = microtime(true);
+  //   example 1: timeStamp > 1000000000 && timeStamp < 2000000000
+  //   returns 1: true
+
+  var now = new Date()
+    .getTime() / 1000;
+  var s = parseInt(now, 10);
+
+  return (get_as_float) ? now : (Math.round((now - s) * 1000) / 1000) + ' ' + s;
+}
+
+var prevClickMicrotime = microtime(true);
+
+function clickEvent() {
+	clickTime = microtime(true);
+  diff = clickTime - prevClickMicrotime;
+  if(diff <= 0.08) {
+    click.style.background = 'red';
+    dcCount.value++;
+  }
+  textarea.value = diff + "\n" + textarea.value;
+  prevClickMicrotime = clickTime;
+  clicks.value++;  
+}
+
+function mouseClick() {
+    var e = window.event;
+  	console.log(e);
+  	clickEvent();
+    return false;
+}
+ </script>
+
+
+</html>
+
